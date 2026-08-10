@@ -1,0 +1,127 @@
+# AI Recruiting Assistant
+
+面向企业的 **AI 招聘全流程决策系统**。不做简历打分，做招聘决策辅助。
+
+---
+
+## 问题
+
+HR 面对 300 份简历要做三件事：看简历、判断匹配度、跟进流程。现有 AI 招聘工具只做到第一步——给个分数，然后就没有了。但 HR 真正需要回答的是：
+
+- **为什么**推荐这个人？（不是 "AI 说 86% 匹配"）
+- **面试时该问什么**？（不是临时想问题）
+- **面完后的判断和 AI 预测差多远**？（不是为了淘汰，是为了下次更准）
+
+---
+
+## 解决思路
+
+不是"AI 替代 HR"，而是 **AI 帮 HR 做判断**。每个环节都有具体的辅助动作：
+
+| 环节 | HR 的痛点 | AI 做什么 |
+|------|----------|----------|
+| 定义需求 | 业务方说不清要什么人 | AI 反向追问 + 生成 Hiring Brief（目标+成功标准+挑战） |
+| 筛选简历 | 看不过来 | 结构化提取 + 匹配分析 + **展示判断依据**（不是分数） |
+| 面试准备 | 不知道问什么 | 基于候选人缺口生成**具体的面试问题** |
+| 面试反馈 | AI 预测和实际表现脱节 | 面试后对比 AI 预测 vs 实际评分 |
+| 入职管理 | 录用到入职信息断层 | 自动生成入职链接 + 员工自助填写 + 台账预警 |
+
+---
+
+## 完整流程
+
+```
+公司设置 → 招聘需求 → AI追问 → Hiring Brief → 岗位画像
+   ↓
+上传简历 → AI解析 → 匹配分析 → 候选人评审台 → HR决策
+   ↓
+面试准备清单 → 面试反馈 → 录用/归档
+   ↓
+入职登记(HR+员工) → 员工台账(试用期预警)
+```
+
+---
+
+## 和市面上产品的区别
+
+| 竞品 | 本系统 |
+|------|--------|
+| 简历打分（"匹配度86%"） | 展示判断依据（优势/不足/面试建议） |
+| AI 直接筛人 | AI 辅助 + HR 最终决策 |
+| 面试跟 AI 分析脱节 | 面试问题基于候选人缺口生成 + 反馈闭环 |
+| 录用了就结束了 | 自动生成入职链接 + 员工台账 + 试用期预警 |
+| 技术展示型（"我接入了 LLM"） | 产品判断型（"我设计了追问引擎让 AI 不瞎编"） |
+
+---
+
+## 关键产品决策
+
+1. **不做评分数字** — 显示 Match Report（优势/不足/面试建议），不显示"匹配度 86%"
+2. **面试问题不让人举他没的经验** — 缺 SaaS 经验不问"举例说明你的 SaaS 经验"，问可迁移能力
+3. **AI 追问引擎** — 根据 HR 输入的招聘背景，主动追问信息缺口
+4. **AI 预测 vs 实际面试对比** — 面试完成后记录实际表现，校准匹配准确性
+5. **Hiring Brief** — 招聘不只是 JD，还包含"为什么招"、"入职后干什么"、"成功标准是什么"
+
+---
+
+## 快速开始
+
+**环境要求：** Python 3.10+ · Node.js 18+
+
+```bash
+# 后端
+cd backend
+python -m venv .venv
+.venv\Scripts\activate  # Windows
+pip install -r requirements.txt
+python ../scripts/init_db.py
+python ../scripts/load_demo_data.py
+uvicorn main:app --host 0.0.0.0 --port 8000
+
+# 前端（新终端）
+cd frontend
+npm install
+npm run dev
+```
+
+打开 `http://localhost:3000`
+
+**配置 LLM（可选）：**
+
+设置环境变量后启动，默认 Mock 模式可直接演示：
+
+```bash
+$env:LLM_API_KEY = "your-deepseek-key"
+```
+
+---
+
+## 技术栈
+
+```
+Frontend:  Next.js 16 + Tailwind + TypeScript
+Backend:   FastAPI + SQLAlchemy + SQLite
+AI Layer:  独立 ai-service，支持 DeepSeek / Qwen 切换
+PDF:       PyMuPDF
+```
+
+---
+
+## 项目结构
+
+```
+├── docs/              # 完整 PRD + 数据模型 + AI Workflow + 决策记录
+├── backend/           # FastAPI (14 API, 7 models, 3 analyzers)
+├── frontend/          # Next.js (7 pages)
+├── ai_service/        # 独立 AI 层 (LLMProvider 抽象)
+├── demo-data/         # PDF简历 + JD + 预期结果
+├── scripts/           # 初始化 + 演示数据
+├── data/              # SQLite
+└── storage/           # 简历 + 员工文件
+```
+
+---
+
+## License
+
+MIT

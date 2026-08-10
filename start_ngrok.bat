@@ -1,0 +1,3 @@
+@echo off
+echo Starting ngrok tunnel...
+"D:\honor share\ai-recruiting-saas\tools\ngrok\ngrok.exe" http 3000
