@@ -14,6 +14,12 @@ data/*.db
 data/*.db-*
 data/*.db-shm
 
+# Generated demo resume PDFs (rebuild with scripts/generate_resumes.py)
+demo-data/resumes-text/
+
+# 开发过程状态记录（含本机路径与演示账号）
+docs/10-project-state.md
+
 # Uploaded files
 storage/resumes/*
 storage/exports/*
@@ -32,6 +38,22 @@ Thumbs.db
 
 # Local tools (large binaries)
 tools/ngrok/
+
+# 本地启动脚本、隧道地址与调试脚本（含本机路径，不上传）
+tunnel_url.txt
+start_all.bat
+start_ngrok.bat
+scripts/ngrok_tunnel.py
+scripts/generate_resumes.py
+scripts/self_check.py
+scripts/debug_semantic.py
+scripts/check_embeddings_api.py
+scripts/create_demo_user.py
+scripts/test_*.py
+
+# 本地开发规则文件
+frontend/CLAUDE.md
+frontend/AGENTS.md
 
 # Env
 .env

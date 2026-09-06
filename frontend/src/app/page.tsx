@@ -54,8 +54,8 @@ export default function Dashboard() {
     }
   };
 
-  if (!authChecked || !stats) {
-    return null; // Will redirect to login or show nothing until loaded
+  if (!stats) {
+    return null;
   }
 
   const today = new Date();

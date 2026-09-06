@@ -66,8 +66,8 @@
 
 | 阶段 | 方案 | 位置 |
 |------|------|------|
-| V1 | SQLite | `D:\honor share\ai-recruiting-saas\data\ai_recruit.db` |
-| V2+ | PostgreSQL | Windows 原生安装，data 目录配到 D 盘 |
+| V1 | SQLite | `data/ai_recruit.db`（项目内相对路径） |
+| V2+ | PostgreSQL | 通过环境变量 `DATABASE_URL` 配置连接串 |
 
 ### AI Layer
 

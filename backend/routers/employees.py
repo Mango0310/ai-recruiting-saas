@@ -137,7 +137,7 @@ def onboard_employee(body: OnboardRequest, db: Session = Depends(get_db), user: 
 
     try:
         from services.notify_service import notify_new_employee
-        onboard_link = f"http://localhost:3000/onboarding/{onboard_token}"
+        onboard_link = f"{os.getenv('FRONTEND_BASE_URL', 'http://localhost:3000')}/onboarding/{onboard_token}"
         notify_new_employee(employee.name, employee.position, employee.department, onboard_link)
     except Exception:
         pass
@@ -644,7 +644,7 @@ def regenerate_onboard_token(employee_id: int, db: Session = Depends(get_db), us
     db.commit()
     db.refresh(emp)
 
-    onboard_link = f"http://localhost:3000/onboarding/{emp.onboard_token}"
+    onboard_link = f"{os.getenv('FRONTEND_BASE_URL', 'http://localhost:3000')}/onboarding/{emp.onboard_token}"
     return {"ok": True, "onboard_token": emp.onboard_token, "onboard_link": onboard_link}
 
 

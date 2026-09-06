@@ -24,22 +24,21 @@ const AuthContext = createContext<AuthState>({
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(() => {
-    if (typeof window !== "undefined") return localStorage.getItem("ai_recruit_token");
-    return null;
-  });
-  const [loading, setLoading] = useState(!!token);
+  const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!token) {
+    const saved = localStorage.getItem("ai_recruit_token");
+    if (!saved) {
       setLoading(false);
       return;
     }
-    axios.get("/api/auth/me", { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => setUser(r.data))
+    setToken(saved);
+    axios.get("/api/auth/me", { headers: { Authorization: `Bearer ${saved}` } })
+      .then(r => { setUser(r.data); })
       .catch(() => { localStorage.removeItem("ai_recruit_token"); setToken(null); })
       .finally(() => setLoading(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/set-state-in-effect
   }, []);
 
   const login = async (email: string, password: string) => {

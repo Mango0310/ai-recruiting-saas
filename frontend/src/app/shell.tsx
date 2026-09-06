@@ -1,26 +1,30 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { AuthProvider, useAuth } from "@/lib/auth";
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { user, token, loading } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
+  const [hasToken, setHasToken] = useState(false);
+  const [checked, setChecked] = useState(false);
 
   const isPublic = pathname === "/login" || pathname === "/register" || pathname?.startsWith("/onboarding/");
 
   useEffect(() => {
-    if (!loading && !user && !token && !isPublic) {
+    const token = localStorage.getItem("ai_recruit_token");
+    setHasToken(!!token);
+    setChecked(true);
+    if (!isPublic && !token) {
       router.replace("/login");
     }
-  }, [loading, user, token, isPublic, router]);
+  }, [isPublic, router]);
 
-  // Don't render protected pages until we know the user is authenticated
-  if (!isPublic && loading) return null;
-  if (!isPublic && !user && !token) return null;
+  if (isPublic) return <>{children}</>;
+  if (!checked) return null;
+  if (!hasToken) return null;
 
   return <>{children}</>;
 }
